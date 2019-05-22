@@ -10,7 +10,10 @@
 import re
 import urllib2
 from docutils import nodes
-from sphinx.util.compat import Directive
+try:
+    from sphinx.util.compat import Directive
+except ImportError:
+    from docutils.parsers.rst import Directive
 
 
 class slide(nodes.General, nodes.Element):
