@@ -8,6 +8,7 @@
 """
 
 import re
+import requests
 import urllib2
 from docutils import nodes
 try:
