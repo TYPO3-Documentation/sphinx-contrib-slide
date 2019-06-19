@@ -46,7 +46,7 @@ class SlideDirective(Directive):
 def get_slide_options(url):
     if re.match('https://docs.google.com/presentation/(pub\?|d/)', url):
         return get_slide_options_for_googledocs(url)
-    elif re.match('http://www.slideshare.net/', url):
+    elif re.match('https?://www.slideshare.net/', url):
         return get_slide_options_for_slideshare(url)
     elif re.match('https://speakerdeck.com/', url):
         return get_slide_options_for_speakerdeck(url)
