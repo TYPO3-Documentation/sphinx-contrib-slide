@@ -75,26 +75,12 @@ def get_slide_options_for_googledocs(url):
 
 
 def get_slide_options_for_slideshare(url):
-    options = {}
-    options['type'] = 'slideshare'
-
-    content = urllib2.urlopen(url).read()
-    matched = re.search('http://www.slideshare.net/slideshow/embed_code/\d+', content)
-    if matched:
-        options['embed_url'] = matched.group(0)
-
-    matched = re.search('<title>(.*?)</title>', content)
-    if matched:
-        options['title'] = matched.group(1).decode('utf-8')
-
-    matched = re.search('<meta name="slideshow_author".*? content="(.*?)" />', content)
-    if matched:
-        options['author_url'] = matched.group(1)
-
-    matched = re.search('<img class="h-author-image".*? alt="(.*?)" width="50" />', content)
-    if matched:
-        options['author_name'] = matched.group(1).decode('utf-8')
-
+    options = {'type': 'slideshare failed'}
+    payload = {'url': url, 'format': 'json'}
+    r = requests.get('https://www.slideshare.net/api/oembed/2', params=payload)
+    if r.status_code == 200:
+        options = r.json()
+        options['type'] = 'slideshare'
     return options
 
 
@@ -137,13 +123,7 @@ def html_visit_slide_node(self, node):
     if options['type'] == 'googledocs':
         self.body.append(options['html'])
     elif options['type'] == 'slideshare':
-        template = """<iframe src="%s" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen="true"> </iframe> <div style="margin-bottom:5px"> <strong> <a href="%s" title="%s" target="_blank">%s</a> </strong> from <strong><a href="%s" target="_blank">%s</a></strong> </div>"""
-        self.body.append(template % (options.get('embed_url'),
-                                     node.get('url'),
-                                     options.get('title', ""),
-                                     options.get('title', ""),
-                                     options.get('author_url'),
-                                     options.get('author_name', "")))
+        self.body.append(options.get('html', ''))
     elif options['type'] == 'speakerdeck':
         template = """<script async="async" class="speakerdeck-embed" data-id="%s" data-ratio="%s" src="//speakerdeck.com/assets/embed.js"> </script>"""
         self.body.append(template % (options.get('data_id'), options.get('data_ratio')))
