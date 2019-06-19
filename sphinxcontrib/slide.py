@@ -58,18 +58,19 @@ def get_slide_options(url):
 
 
 def get_slide_options_for_googledocs(url):
+    template = """<iframe src="%s/embed?start=false&loop=false&delayms=3000" frameborder="0" width="480" height="299" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>"""
+    template_old = """<iframe src="%s" frameborder="0" width="480" height="375" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"> </iframe>"""
     options = {}
-    options['type'] = 'googledocs'
-    if re.search('/presentation/pub', url):
-        options['embed_url'] = re.sub('/pub\?', '/embed?', url)
-    elif re.search('/presentation/d/', url):
-        options['embed_url'] = re.sub('/edit.*', '', re.sub('/d/', '/embed?id=', url))
-
-    content = urllib2.urlopen(url).read()
-    matched = re.search('<title>(.*?)</title>', content)
-    if matched:
-        options['title'] = matched.group(1).decode('utf-8')
-
+    embed_url = url.rstrip('/')
+    if embed_url.endswith('embed'):
+        embed_url = embed_url[:-len('embed')]
+    embed_url = embed_url.rstrip('/')
+    if embed_url:
+        options['type'] = 'googledocs'
+        options['html'] = template % embed_url
+    else:
+        options['type'] = 'googledocs failed'
+        options['html'] = ''
     return options
 
 
@@ -134,8 +135,7 @@ def html_visit_slide_node(self, node):
     options = node['slide_options']
 
     if options['type'] == 'googledocs':
-        template = """<iframe src="%s" frameborder="0" width="480" height="375" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"> </iframe>"""
-        self.body.append(template % options.get('embed_url'))
+        self.body.append(options['html'])
     elif options['type'] == 'slideshare':
         template = """<iframe src="%s" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen="true"> </iframe> <div style="margin-bottom:5px"> <strong> <a href="%s" title="%s" target="_blank">%s</a> </strong> from <strong><a href="%s" target="_blank">%s</a></strong> </div>"""
         self.body.append(template % (options.get('embed_url'),
