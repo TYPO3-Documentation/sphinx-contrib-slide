@@ -44,8 +44,12 @@ class SlideDirective(Directive):
 
 
 def get_slide_options(url):
-    if re.match('https://docs.google.com/presentation/(pub\?|d/)', url):
-        return get_slide_options_for_googledocs(url)
+    if re.match('https://docs.google.com/presentation/d/', url):
+        return get_slide_options_for_googledocs(url, 'presentation', 'embed')
+    elif re.match('https://docs.google.com/document/d/', url):
+        return get_slide_options_for_googledocs(url, 'document', 'pub')
+    elif re.match('https://docs.google.com/spreadsheets/d/', url):
+        return get_slide_options_for_googledocs(url, 'spreadsheets', 'pubhtml')
     elif re.match('https?://www.slideshare.net/', url):
         return get_slide_options_for_slideshare(url)
     elif re.match('https://speakerdeck.com/', url):
@@ -57,20 +61,26 @@ def get_slide_options(url):
         raise Exception(msg)
 
 
-def get_slide_options_for_googledocs(url):
-    template = """<iframe src="%s/embed?start=false&loop=false&delayms=3000" frameborder="0" width="480" height="299" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>"""
-    template_old = """<iframe src="%s" frameborder="0" width="480" height="375" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"> </iframe>"""
+def get_slide_options_for_googledocs(url, segment1, endseg):
     options = {}
-    embed_url = url.rstrip('/')
-    if embed_url.endswith('embed'):
-        embed_url = embed_url[:-len('embed')]
-    embed_url = embed_url.rstrip('/')
-    if embed_url:
-        options['type'] = 'googledocs'
+    options['type'] = 'googledocs'
+    embed_url = url.split('?', 1)[0].rstrip('/')
+    if not embed_url.endswith('/' + endseg):
+        embed_url += '/' + endseg
+    options['embed_url'] = embed_url
+
+    if segment1 == 'presentation':
+        # 576x420, 480x375, 480x299
+        template = """<iframe src="%s?start=false&loop=false&delayms=3000" frameborder="0" width="576" height="420" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>"""
+        options['html'] = template % embed_url
+    elif segment1 == 'spreadsheets':
+        template = """<iframe src="%s?widget=true&amp;headers=false" width="576" height="420"></iframe>"""
+        options['html'] = template % embed_url
+    elif segment1 == 'document':
+        template = """<iframe src="%s?embedded=true" width="576" height="420"></iframe>"""
         options['html'] = template % embed_url
     else:
-        options['type'] = 'googledocs failed'
-        options['html'] = ''
+        options['html'] = '<div><a href="%s">%s</a></div>' % (embed_url, embed_url)
     return options
 
 
