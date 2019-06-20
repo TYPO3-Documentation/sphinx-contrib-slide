@@ -101,8 +101,8 @@ def get_slide_options_for_slideshare(url):
         options['html'] = althtml
     return options
 
-
 def get_slide_options_for_speakerdeck(url):
+    althtml = '<div><a href="%s">%s</a></div>\n' % (url, url)
     options = {}
     payload = {'url': url}
     r = requests.get('https://speakerdeck.com/oembed.json', params=payload)
@@ -140,9 +140,10 @@ def html_visit_slide_node(self, node):
 
     elif options['type'] == 'slideshare':
         self.body.append(options.get('html', ''))
+
     elif options['type'] == 'speakerdeck':
-        template = """<script async="async" class="speakerdeck-embed" data-id="%s" data-ratio="%s" src="//speakerdeck.com/assets/embed.js"> </script>"""
-        self.body.append(template % (options.get('data_id'), options.get('data_ratio')))
+        self.body.append(options.get('html', ''))
+
     elif options['type'] == 'slides.com':
         template = ('<iframe src="%s" width="576" height="420" scrolling="no"'
                     ' frameborder="0" webkitallowfullscreen mozallowfullscreen'
