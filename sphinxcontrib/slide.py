@@ -7,9 +7,10 @@
     :license: BSD, see LICENSE for details.
 """
 
+from __future__ import absolute_import
 import re
 import requests
-import urllib2
+import six.moves.urllib.request, six.moves.urllib.error, six.moves.urllib.parse
 from docutils import nodes
 try:
     from sphinx.util.compat import Directive
@@ -36,9 +37,8 @@ class SlideDirective(Directive):
             node = slide()
             node['url'] = self.arguments[0]
             node['slide_options'] = get_slide_options(self.arguments[0])
-
             return [node]
-        except Exception, e:
+        except Exception as e:
             reporter = self.state.document.reporter
             return [reporter.warning(str(e), line=self.lineno)]
 
@@ -68,19 +68,30 @@ def get_slide_options_for_googledocs(url, slidetype, final):
     if not embed_url.endswith('/' + final):
         embed_url += '/' + final
     options['embed_url'] = embed_url
-
     if slidetype == 'presentation':
         # 576x420, 480x375, 480x299
-        template = """<div class="iframe-box iframe-box-presentation iframe-box-google"><iframe src="%s?start=false&loop=false&delayms=3000" frameborder="0" width="576" height="420" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>"""
+        template = (
+            '<div class="iframe-box iframe-box-presentation iframe-box-google">'
+            '<iframe src="%s?start=false&loop=false&delayms=3000" '
+            'frameborder="0" width="576" height="420" allowfullscreen="true" '
+            'mozallowfullscreen="true" webkitallowfullscreen="true">'
+            '</iframe></div>')
         options['html'] = template % embed_url
     elif slidetype == 'spreadsheets':
-        template = """<div class="iframe-box iframe-box-spreadsheet iframe-box-google"><div class="iframe-box"><iframe src="%s?widget=true&amp;headers=false" width="576" height="420"></iframe></div>"""
+        template = (
+            '<div class="iframe-box iframe-box-spreadsheet iframe-box-google">'
+            '<iframe src="%s?widget=true&amp;headers=false"'
+            ' width="576" height="420"></iframe></div>')
         options['html'] = template % embed_url
     elif slidetype == 'document':
-        template = """<div class="iframe-box iframe-box-document iframe-box-google"><iframe src="%s?embedded=true" width="576" height="420"></iframe></div>"""
+        template = (
+            '<div class="iframe-box iframe-box-document iframe-box-google">'
+            '<iframe src="%s?embedded=true" width="576" height="420">'
+            '</iframe></div>')
         options['html'] = template % embed_url
     else:
-        options['html'] = '<div><a href="%s">%s</a></div>\n' % (embed_url, embed_url)
+        options['html'] = (
+                '<div><a href="%s">%s</a></div>\n' % (embed_url, embed_url))
     return options
 
 
@@ -92,7 +103,8 @@ def get_slide_options_for_slideshare(url):
     if r.status_code == 200:
         options = r.json()
     options['type'] = 'slideshare'
-    divstart = '<div class ="iframe-box iframe-box-presentation iframe-box-slideshare">'
+    divstart = ('<div class ="iframe-box iframe-box-presentation '
+                'iframe-box-slideshare">')
     divend = '</div>'
     html = options.get('html')
     if html:
@@ -100,6 +112,7 @@ def get_slide_options_for_slideshare(url):
     else:
         options['html'] = althtml
     return options
+
 
 def get_slide_options_for_speakerdeck(url):
     althtml = '<div><a href="%s">%s</a></div>\n' % (url, url)
@@ -109,7 +122,8 @@ def get_slide_options_for_speakerdeck(url):
     if r.status_code == 200:
         options = r.json()
     options['type'] = 'speakerdeck'
-    divstart = '<div class ="iframe-box iframe-box-presentation iframe-box-speakerdeck">'
+    divstart = ('<div class ="iframe-box iframe-box-presentation '
+                'iframe-box-speakerdeck">')
     divend = '</div>'
     html = options.get('html')
     if html:
@@ -123,7 +137,8 @@ def get_slide_options_for_slides_com(url):
     options = {}
     options['type'] = 'slides.com'
     embed_url = url.rstrip('/').rstrip('#') + '/embed'
-    divstart = '<div class ="iframe-box iframe-box-presentation iframe-box-slides-com">'
+    divstart = ('<div class ="iframe-box iframe-box-presentation '
+                'iframe-box-slides-com">')
     divend = '</div>'
     template = ('<iframe src="%s" width="576" height="420" scrolling="no"'
                 ' frameborder="0" webkitallowfullscreen mozallowfullscreen'
