@@ -122,13 +122,13 @@ def get_slide_options_for_speakerdeck(url):
 def get_slide_options_for_slides_com(url):
     options = {}
     options['type'] = 'slides.com'
-    options['embed_url'] = re.sub('https?:', '', re.sub('#/$', '', url)) + '/embed'
-
-    content = urllib2.urlopen(url).read()
-    matched = re.search('<h4>(.*?)</h4>', content)
-    if matched:
-        options['title'] = matched.group(1).decode('utf-8')
-
+    embed_url = url.rstrip('/').rstrip('#') + '/embed'
+    divstart = '<div class ="iframe-box iframe-box-presentation iframe-box-slides-com">'
+    divend = '</div>'
+    template = ('<iframe src="%s" width="576" height="420" scrolling="no"'
+                ' frameborder="0" webkitallowfullscreen mozallowfullscreen'
+                ' allowfullscreen></iframe>')
+    options['html'] = divstart + (template % embed_url) + divend
     return options
 
 
@@ -145,10 +145,7 @@ def html_visit_slide_node(self, node):
         self.body.append(options.get('html', ''))
 
     elif options['type'] == 'slides.com':
-        template = ('<iframe src="%s" width="576" height="420" scrolling="no"'
-                    ' frameborder="0" webkitallowfullscreen mozallowfullscreen'
-                    ' allowfullscreen></iframe>')
-        self.body.append(template % options.get('embed_url'))
+        self.body.append(options.get('html', ''))
 
 
 def latex_visit_slide_node(self, node):
