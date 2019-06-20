@@ -61,26 +61,26 @@ def get_slide_options(url):
         raise Exception(msg)
 
 
-def get_slide_options_for_googledocs(url, segment1, endseg):
+def get_slide_options_for_googledocs(url, slidetype, final):
     options = {}
     options['type'] = 'googledocs'
     embed_url = url.split('?', 1)[0].rstrip('/')
-    if not embed_url.endswith('/' + endseg):
-        embed_url += '/' + endseg
+    if not embed_url.endswith('/' + final):
+        embed_url += '/' + final
     options['embed_url'] = embed_url
 
-    if segment1 == 'presentation':
+    if slidetype == 'presentation':
         # 576x420, 480x375, 480x299
-        template = """<iframe src="%s?start=false&loop=false&delayms=3000" frameborder="0" width="576" height="420" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>"""
+        template = """<div class="iframe-box iframe-box-presentation iframe-box-google"><iframe src="%s?start=false&loop=false&delayms=3000" frameborder="0" width="576" height="420" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>"""
         options['html'] = template % embed_url
-    elif segment1 == 'spreadsheets':
-        template = """<iframe src="%s?widget=true&amp;headers=false" width="576" height="420"></iframe>"""
+    elif slidetype == 'spreadsheets':
+        template = """<div class="iframe-box iframe-box-spreadsheet iframe-box-google"><div class="iframe-box"><iframe src="%s?widget=true&amp;headers=false" width="576" height="420"></iframe></div>"""
         options['html'] = template % embed_url
-    elif segment1 == 'document':
-        template = """<iframe src="%s?embedded=true" width="576" height="420"></iframe>"""
+    elif slidetype == 'document':
+        template = """<div class="iframe-box iframe-box-document iframe-box-google"><iframe src="%s?embedded=true" width="576" height="420"></iframe></div>"""
         options['html'] = template % embed_url
     else:
-        options['html'] = '<div><a href="%s">%s</a></div>' % (embed_url, embed_url)
+        options['html'] = '<div><a href="%s">%s</a></div>\n' % (embed_url, embed_url)
     return options
 
 
@@ -97,20 +97,13 @@ def get_slide_options_for_slideshare(url):
 def get_slide_options_for_speakerdeck(url):
     options = {}
     options['type'] = 'speakerdeck'
-
-    content = urllib2.urlopen(url).read()
-    matched = re.search('<h1>(.*?)</h1>', content)
-    if matched:
-        options['title'] = matched.group(1).decode('utf-8')
-
-    matched = re.search('data-id="(.*?)"', content)
-    if matched:
-        options['data_id'] = matched.group(1).decode('utf-8')
-
-    matched = re.search('data-ratio="(.*?)"', content)
-    if matched:
-        options['data_ratio'] = matched.group(1).decode('utf-8')
-
+    divstart = '<div class ="iframe-box iframe-box-presentation iframe-box-speakerdeck">'
+    divend = '</div>'
+    html = options.get('html')
+    if html:
+        options['html'] = divstart + html + divend
+    else:
+        options['html'] = althtml
     return options
 
 
