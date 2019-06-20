@@ -85,17 +85,29 @@ def get_slide_options_for_googledocs(url, slidetype, final):
 
 
 def get_slide_options_for_slideshare(url):
-    options = {'type': 'slideshare failed'}
+    althtml = '<div><a href="%s">%s</a></div>\n' % (url, url)
+    options = {}
     payload = {'url': url, 'format': 'json'}
     r = requests.get('https://www.slideshare.net/api/oembed/2', params=payload)
     if r.status_code == 200:
         options = r.json()
-        options['type'] = 'slideshare'
+    options['type'] = 'slideshare'
+    divstart = '<div class ="iframe-box iframe-box-presentation iframe-box-slideshare">'
+    divend = '</div>'
+    html = options.get('html')
+    if html:
+        options['html'] = divstart + html + divend
+    else:
+        options['html'] = althtml
     return options
 
 
 def get_slide_options_for_speakerdeck(url):
     options = {}
+    payload = {'url': url}
+    r = requests.get('https://speakerdeck.com/oembed.json', params=payload)
+    if r.status_code == 200:
+        options = r.json()
     options['type'] = 'speakerdeck'
     divstart = '<div class ="iframe-box iframe-box-presentation iframe-box-speakerdeck">'
     divend = '</div>'
@@ -125,6 +137,7 @@ def html_visit_slide_node(self, node):
 
     if options['type'] == 'googledocs':
         self.body.append(options['html'])
+
     elif options['type'] == 'slideshare':
         self.body.append(options.get('html', ''))
     elif options['type'] == 'speakerdeck':
