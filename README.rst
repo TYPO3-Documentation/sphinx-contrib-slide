@@ -31,32 +31,35 @@ What can be embedded?
 Syntax
 ------
 
-`.. slide:: URL`
+.. code-block:: rst
+
+   .. slide:: URL
 
 URL must be one of these::
 
    https://docs.google.com/document/d/…
    https://docs.google.com/presentation/d/…
    https://docs.google.com/spreadsheets/d/…
-   https://slides.com/…          or http://…
+   https://slides.com/…                       (or http://…)
    https://speakerdeck.com/…
-   https://www.slideshare.net/…  or http://…
+   https://www.slideshare.net/…               (or http://…)
 
 Tip
 ---
 
 *Finding the URL:* For Google docs go to ① "File", ② "Publish to the web",
-③ and "Link" or ④ copy the basic part of the link from your browser.
+③ and "Link" or ④ copy the initial basic part of the url.
 
 
 Code and contributing
 =====================
 
-Please find `the repository
-<https://github.com/TYPO3-Documentation/sphinx-contrib-slide>`__ at Github.
+`The repository
+<https://github.com/TYPO3-Documentation/sphinx-contrib-slide>`__ lives at
+Github.
 
-For contributions please add an `issue
-<https://github.com/TYPO3-Documentation/sphinx-contrib-slide/issues>`_ there or
+For contributions please add an issue `there
+<https://github.com/TYPO3-Documentation/sphinx-contrib-slide/issues>`_ or
 provide a pull request.
 
 
@@ -94,8 +97,8 @@ Install the Python package from the repository:
    RELEASE_ARCHIVE=1.0.0.zip
    pipenv install https://github.com/sphinx-contrib/slide/archive/$RELEASE_ARCHIVE
 
-Verify: Make sure the 'slide' module can be loaded. The following command
-should run without error:
+Verify: Make sure the module can be loaded. The following command should run
+without error:
 
 .. code-block:: shell
 
@@ -105,8 +108,8 @@ should run without error:
 Configure Sphinx
 ----------------
 
-To enable this extension, add ``sphinxcontrib.slide`` module to the extensions
-option at :file:`conf.py`.
+To enable this extension, add ``'sphinxcontrib.slide'`` to the list of
+extension names that are to be loaded in file ``conf.py``.
 
 .. code-block:: python
 
@@ -117,18 +120,20 @@ option at :file:`conf.py`.
 Using the directive
 -------------------
 
-Currently the directive only takes a single parameter 'URL':
+Currently the directive only takes a single parameter 'URL' and no options:
 
-.. code-block: rst
+.. code-block:: rst
 
    .. slide:: URL
+
 
 
 Optional CSS
 ------------
 
-Consider adding the following CSS to your theme. It will stretch the width
-to 100 percent and react responsively keeping the aspect ratio.
+Consider the following CSS. It will stretch the width to 100 percent and
+provide responsiveness, thereby preserving the aspect ratio. Currently the
+aspect ratio is hardcoded to 16:9 and approximately 4:3 for Slideshare.
 
 .. code-block::
 
