@@ -9,7 +9,6 @@ Sphinx extension "sphinx-contrib.slide"
                   <https://github.com/TYPO3-Documentation/sphinx-contrib-slide/tree/tk0miya>`__
 
 :Version:         1.0
-:Release:         1.0.0
 :Github release:  t3v1.0.0
 :Download:        https://github.com/TYPO3-Documentation/sphinx-contrib-slide/archive/t3v1.0.0.zip
 
