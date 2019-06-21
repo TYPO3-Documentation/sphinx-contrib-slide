@@ -160,4 +160,4 @@ aspect ratio is hardcoded to 16:9 and approximately 4:3 for Slideshare.
    }
 
 
-End of README.
+End of README.rst
