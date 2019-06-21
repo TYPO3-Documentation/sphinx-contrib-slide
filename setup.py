@@ -9,22 +9,21 @@ This package contains the slide Sphinx extension.
 This extension enable you to embed your slides on slideshare_ and other sites.
 Following code is sample::
 
-   .. slide:: http://www.slideshare.net/TakeshiKomiya/blockdiag-a-simple-diagram-generator
+   .. slide:: https://www.slideshare.net/TakeshiKomiya/blockdiag-a-simple-diagram-generator
 
 
-.. _slideshare: http://www.slideshare.net/
+.. _slideshare: https://www.slideshare.net/
 '''
 
 requires = ['Sphinx>=0.6', 'setuptools']
 
 setup(
     name='sphinxcontrib-slide',
-    version='0.3.1',
-    url='http://bitbucket.org/birkenfeld/sphinx-contrib',
-    download_url='http://pypi.python.org/pypi/sphinxcontrib-slide',
+    version='1.0.0',
+    url='https://github.com/TYPO3-Documentation/sphinx-contrib-slide',
     license='BSD',
-    author='Takeshi KOMIYA',
-    author_email='i.tkomiya@gmail.com',
+    author='Martin Bless',
+    author_email='martin.bless@mbless.de',
     description='Sphinx "slide" extension',
     long_description=long_desc,
     zip_safe=False,
