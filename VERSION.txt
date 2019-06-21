@@ -1,0 +1,11 @@
+1.0.0
+
+
+Keep the version number in sync:
+
+1. in the first line of this file
+2. in __init__.py
+3. in README.rst
+4. in setup.py
+
+End.
