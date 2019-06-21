@@ -4,8 +4,8 @@ Sphinx extension "sphinx-contrib.slide"
 
 :Author:          Martin Bless <martin.bless@mbless.de>
 :Original author: Takeshi Komiya (`tk0miya <https://github.com/tk0miya>`_)
-:Original repo:   https://github.com/sphinx-contrib/slide/, kept in branch
-                  `tk0miya
+:Original repo:   https://github.com/sphinx-contrib/slide/, kept `here in
+                  branch 'tk0miya'
                   <https://github.com/TYPO3-Documentation/sphinx-contrib-slide/tree/tk0miya>`__
 
 :Version:         1.0
@@ -48,7 +48,7 @@ Tip
 ---
 
 *Finding the URL:* For Google docs go to ① "File", ② "Publish to the web",
-③ and "Link" or ④ copy the initial basic part of the url.
+③ and "Link" or ① copy the initial basic part of the url.
 
 
 Code and contributing
@@ -94,7 +94,7 @@ Install the Python package from the repository:
    # set a proper release
    RELEASE_ARCHIVE=0.3.0.zip
    RELEASE_ARCHIVE=0.3.1.zip
-   RELEASE_ARCHIVE=1.0.0.zip
+   RELEASE_ARCHIVE=t3v1.0.0.zip
    pipenv install https://github.com/sphinx-contrib/slide/archive/$RELEASE_ARCHIVE
 
 Verify: Make sure the module can be loaded. The following command should run
