@@ -7,7 +7,7 @@
     :license: BSD, see LICENSE for details.
 """
 
-from __future__ import absolute_importby trial and error
+from __future__ import absolute_import
 import re
 import requests
 import six.moves.urllib.request, six.moves.urllib.error, six.moves.urllib.parse
