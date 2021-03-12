@@ -18,6 +18,9 @@ except ImportError:
     from docutils.parsers.rst import Directive
 
 
+__version__ = 'v1.1.0'
+
+
 class slide(nodes.General, nodes.Element):
     pass
 
@@ -181,4 +184,8 @@ def setup(app):
                  html=(html_visit_slide_node, depart_slide_node),
                  latex=(latex_visit_slide_node, depart_slide_node))
     app.add_directive('slide', SlideDirective)
-
+    return {
+        'parallel_read_safe': True,
+        'parallel_write_safe': True,
+        'version': __version__,
+    }

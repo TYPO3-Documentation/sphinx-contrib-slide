@@ -19,7 +19,7 @@ requires = ['Sphinx>=0.6', 'setuptools']
 
 setup(
     name='sphinxcontrib-slide',
-    version='1.0.0',
+    version='1.1.0',
     url='https://github.com/TYPO3-Documentation/sphinx-contrib-slide',
     license='BSD',
     author='Martin Bless',
